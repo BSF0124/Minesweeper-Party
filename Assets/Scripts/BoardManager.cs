@@ -6,10 +6,8 @@ public class BoardManager : MonoBehaviour
 
     int board_Row = 30;
     int board_Column = 16;
-    const int total_Mines = 99;
 
     [HideInInspector] public int current_mines = 0;
-    private int correct_mines = 0;
 
     int[,] board;
 
@@ -33,6 +31,8 @@ public class BoardManager : MonoBehaviour
                 if(board[row,col] != -1) CalculateAdjacentMines(row, col);
             }
         }
+
+        InstantiateCell();
     }
 
     private void SetRandomMines()
@@ -71,19 +71,17 @@ public class BoardManager : MonoBehaviour
 
     private void InstantiateCell()
     {
-        Vector2 initPosition = new Vector2(-(board_Row/2), board_Column/2);
+        Vector3 initPosition = new Vector3(-(board_Row/2), board_Column/2, 0);
 
-        if(board_Row % 2 != 0) initPosition.x += 0.5f;
-        if(board_Column % 2 != 0) initPosition.y -= 0.5f;
+        if(board_Row % 2 == 0) initPosition.x += 0.5f;
+        if(board_Column % 2 == 0) initPosition.y -= 0.5f;
 
         for(int i = 0; i < board_Column; i++)
         {
-            
             for(int j = 0; j < board_Row; j++)
             {
-                GameObject cell = Instantiate(cellPrefab);
+                GameObject cell = Instantiate(cellPrefab, initPosition + new Vector3(j, -i ,0), Quaternion.identity, transform);
             }
-
         }
     }
 }
