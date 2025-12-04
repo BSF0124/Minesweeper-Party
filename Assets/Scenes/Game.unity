@@ -166,8 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b11e39eb7561a7740bb50365ff17f55b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellPrefab: {fileID: 0}
-  current_mines: 0
+  boardConfig: {fileID: 11400000, guid: 4c55a7ba5820da84dbf6798879e4274a, type: 2}
+  cellPrefab: {fileID: 2873121704193537676, guid: fd14e452b4772c249a36a680478adb31, type: 3}
 --- !u!1 &218055071
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,7 +646,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cellSprite: []
-  cellType: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
