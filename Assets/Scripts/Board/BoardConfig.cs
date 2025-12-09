@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BoardConfig", menuName = "Minsweeper/Board Config")]
+[CreateAssetMenu(fileName = "BoardConfig", menuName = "Minesweeper/Board Config")]
 public class BoardConfig : ScriptableObject
 {
     [Header("Board Size")]

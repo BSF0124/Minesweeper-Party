@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d1bcab71cb5200499929326a223816f, type: 3}
+  m_Name: CellSprite
+  m_EditorClassIdentifier: 
+  unopened: {fileID: 21300000, guid: 88c661e30d744be4483571d5762f9b7a, type: 3}
+  opened: {fileID: 21300000, guid: 22e93339a8c742f4aa4d545353cb954a, type: 3}
+  flag: {fileID: 21300000, guid: d96a682ecc7af3546ab7642e5a6abcc6, type: 3}
+  mineIdle: {fileID: 21300000, guid: 2c02858a7cbd43745bb3588ba05cefa1, type: 3}
+  mineExploded: {fileID: 21300000, guid: a849aecc0f011dc489ebd9c32032f8de, type: 3}
