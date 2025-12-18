@@ -45,25 +45,13 @@ public class BoardManager : MonoBehaviour
         if(cell.cellState == Define.CellState.Flagged)
             return;
 
-        if(cell.isMine)
+        if(cell.cellState == Define.CellState.Opened)
         {
-            cell.OpenCell(true);
-            // 전체 지뢰 공개 로직 추가
-            // 게임 오버 로직 추가
+            OpenAdjacentCells(cell);
             return;
         }
 
-        if(cell.cellState == Define.CellState.Unopened)
-        {
-            cell.OpenCell();
-            if(cell.aroundMineCount == 0)
-                OpenConnectedCells(cell);
-        }
-        
-        if(cell.cellState == Define.CellState.Opened)
-        {
-            // 인접 칸 열기 로직
-        }
+        TryOpenCell(cell);
     }
 
     private void HandleRightClick(Cell cell)
@@ -76,53 +64,82 @@ public class BoardManager : MonoBehaviour
         cell.ToggleFlag();
     }
 
+    private void TryOpenCell(Cell cell)
+    {
+        if(cell.cellState != Define.CellState.Unopened) 
+            return;
+
+        cell.OpenCell(cell.isMine);
+
+        if(cell.isMine)
+        {
+            // 게임 오버
+            return;
+        }
+
+        if(cell.aroundMineCount == 0)
+        {
+            OpenConnectedCells(cell);
+        }
+    }
+
     // 인접한 셀 오픈
     private void OpenAdjacentCells(Cell cell)
     {
         List<Cell> adjacentCells = new List<Cell>();
-        int flag = 0;
+        int flagCount = 0;
 
         for(int dir = 0; dir < 8; dir++)
         {
             int nx = cell.column + Define.dx[dir];
             int ny = cell.row + Define.dy[dir];
 
-            if(!boardData.IsInside(nx,ny)) continue;
+            if(!boardData.IsInside(nx,ny)) 
+                continue;
 
             Cell nextCell = cells[nx,ny];
 
-            if(nextCell.cellState == Define.CellState.Flagged) flag++;
-            else if(nextCell.cellState == Define.CellState.Unopened) adjacentCells.Add(nextCell);
+            if(nextCell.cellState == Define.CellState.Flagged) 
+                flagCount++;
+
+            // 테스트용
+            else if(nextCell.cellState == Define.CellState.Opened && nextCell.isMine) 
+                flagCount++;
+
+            else if(nextCell.cellState == Define.CellState.Unopened) 
+                adjacentCells.Add(nextCell);
         }
 
-        if(flag == cell.aroundMineCount)
-            foreach(var adjacentCell in adjacentCells)
-                adjacentCell.OpenCell();
+        if(flagCount != cell.aroundMineCount)
+            return;
+        
+        foreach(var adjacentCell in adjacentCells)
+            TryOpenCell(adjacentCell);
     }
 
     // 빈 셀 연쇄 오픈
     private void OpenConnectedCells(Cell startCell)
     {
-        Queue<Cell> queue = new Queue<Cell>();
-        queue.Enqueue(startCell);
-
-        while(queue.Count > 0)
+        for(int dir = 0; dir < 8; dir++)
         {
-            Cell cur = queue.Dequeue();
+            int nx = startCell.column + Define.dx[dir];
+            int ny = startCell.row + Define.dy[dir];
 
-            for(int dir = 0; dir < 8; dir++)
-            {
-                int nx = cur.column + Define.dx[dir];
-                int ny = cur.row + Define.dy[dir];
-                if(!boardData.IsInside(nx,ny)) continue;
+            if(!boardData.IsInside(nx,ny)) 
+                continue;
 
-                Cell nextCell = cells[nx,ny];
-                if(nextCell.cellState != Define.CellState.Unopened) continue;
-                if(nextCell.isMine) continue;
+            Cell nextCell = cells[nx,ny];
 
-                cells[nx,ny].OpenCell();
-                if(boardData.board[nx,ny] == 0) queue.Enqueue(nextCell);
-            }
+            if(nextCell.cellState != Define.CellState.Unopened) 
+                continue;
+
+            if(nextCell.isMine) 
+                continue;
+
+            TryOpenCell(nextCell);
         }
     }
+    // 현재는 DFS 구조로 만들었지만, 
+    // 보드의 크기가 매우 커지거나 애니메이션 효과가 필요하거나 
+    // 네트워크 동기화 문제 발생 시 BFS로 변경
 }
