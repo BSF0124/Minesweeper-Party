@@ -5,22 +5,20 @@ public class BoardGenerator
     private BoardData data;
     private int mineCount;
 
-    // 8방향 탐색용
-    private static readonly int[] dx = { -1, 0, 1, -1, 1, -1, 0, 1 };
-    private static readonly int[] dy = { -1, -1, -1, 0, 0, 1, 1, 1 };
-
     public BoardGenerator(BoardData data, int mineCount)
     {
         this.data = data;
         this.mineCount = mineCount;
     }
 
+    // 보드 생성
     public void GenerateBoard()
     {
         PlaceMines();
         CalculateNumbers();
     }
 
+    // 랜덤으로 지뢰 설정
     private void PlaceMines()
     {
         int placed = 0;
@@ -38,6 +36,7 @@ public class BoardGenerator
         }
     }
 
+    // 주변 지뢰 수 계산
     private void CalculateNumbers()
     {
         for(int col = 0; col < data.columns; col++)
@@ -51,8 +50,8 @@ public class BoardGenerator
 
                 for(int dir = 0; dir < 8; dir++)
                 {
-                    int nc = col + dx[dir];
-                    int nr = row + dy[dir];
+                    int nc = col + Define.dx[dir];
+                    int nr = row + Define.dy[dir];
 
                     if(!data.IsInside(nc, nr))
                         continue;

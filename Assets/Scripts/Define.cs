@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class Define
 {
+    // 숫자 색
     public static readonly Color32[] NumberColors =
     {
         new Color32(0,0,0,0),
@@ -15,6 +16,7 @@ public static class Define
         new Color32(128,128,128,255)    // #808080
     };
 
+    // 셀의 상태(0: 안열림, 1: 열림, 2: 깃발 표시)
     public enum CellState
     {
         Unopened,
@@ -23,4 +25,8 @@ public static class Define
         // MineIdle,
         // MineExploded
     }
+
+    // 8방향 탐색용
+    public static readonly int[] dx = { -1, 0, 1, -1, 1, -1, 0, 1 };
+    public static readonly int[] dy = { -1, -1, -1, 0, 0, 1, 1, 1 };
 }

@@ -11,8 +11,10 @@ public class BoardRenderer
         this.parent = parent;
     }
 
-    public void Render(BoardData data)
+    // 화면에 셀 오브젝트들을 배치
+    public Cell[,] Render(BoardData data)
     {
+        Cell[,] cells = new Cell[data.columns, data.rows];
         Vector3 startPos = CalculateStartPosition(data.columns, data.rows);
 
         for(int col = 0; col < data.columns; col++)
@@ -30,8 +32,10 @@ public class BoardRenderer
                 Cell cell = cellObj.GetComponent<Cell>();
                 int value = data.GetValue(col, row);
                 cell.Init(col, row, value);
+                cells[col,row] = cell;
             }
         }
+        return cells;
     }
 
     private Vector3 CalculateStartPosition(int columns, int rows)

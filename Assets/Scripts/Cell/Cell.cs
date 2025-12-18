@@ -9,15 +9,16 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Text text;
     [SerializeField] private CellSprite cellSprite;
 
-    public static event Action<Cell> OnLeftClick;
-    public static event Action<Cell> OnRightClick;
+    public static event Action<Cell> OnLeftClick;   // 좌클릭 이벤트
+    public static event Action<Cell> OnRightClick;  // 우클릭 이벤트
 
-    public int column { get; private set; }
-    public int row { get; private set; }
-    public bool isMine { get; private set; }
-    public int aroundMineCount { get; private set; }
-    public Define.CellState cellState { get; private set; }
+    public int column { get; private set; }                 // column id
+    public int row { get; private set; }                    // row id
+    public bool isMine { get; private set; }                // true: 지뢰 O, false: 지뢰 X
+    public int aroundMineCount { get; private set; }        // 주변 지뢰 개수
+    public Define.CellState cellState { get; private set; } // 셀 상태
 
+    // 셀 설정
     public void Init(int column, int row, int value)
     {
         this.column = column;
@@ -33,15 +34,19 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         sr.sprite = cellSprite.unopened;
     }
 
+    // 클릭 이벤트
     public void OnPointerClick(PointerEventData eventData)
     {
+        // 좌클릭
         if(eventData.button == PointerEventData.InputButton.Left)
             OnLeftClick?.Invoke(this);
 
+        // 우클릭
         if(eventData.button == PointerEventData.InputButton.Right)
             OnRightClick?.Invoke(this);
     }
 
+    // 깃발 표시 토글
     public void ToggleFlag()
     {
         if(cellState == Define.CellState.Flagged)
@@ -56,6 +61,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    // 셀 열기
     public void OpenCell(bool explodeMine = false)
     {
         if(cellState != Define.CellState.Unopened) 
