@@ -45,8 +45,9 @@ public class BoardManager : MonoBehaviour
     // 3. 일반 셀 -> 오픈 시도
     private void HandleLeftClick(Cell cell)
     {
-        // Debug.Log($"Left Click: {cell.column}, {cell.row}");
-
+        if (GameManager.Instance.gameState == Define.GameState.GameOver)
+            return;
+        
         if(cell.cellState == Define.CellState.Flagged)
             return;
 
@@ -61,8 +62,9 @@ public class BoardManager : MonoBehaviour
 
     private void HandleRightClick(Cell cell)
     {
-        // Debug.Log($"Right Click: {cell.column}, {cell.row}");
-
+        if (GameManager.Instance.gameState == Define.GameState.GameOver)
+            return;
+            
         if(cell.cellState == Define.CellState.Opened)
             return;
 
@@ -76,12 +78,15 @@ public class BoardManager : MonoBehaviour
 
         cell.OpenCell(cell.isMine);
 
+        // 지뢰 클릭 -> 게임 오버
         if(cell.isMine)
         {
-            // 게임 오버
+            GameManager.Instance.GameOver();
+            RevealAllMines();
             return;
         }
 
+        // 빈 셀 -> 연쇄 오픈
         if(cell.aroundMineCount == 0)
         {
             OpenConnectedCells(cell);
@@ -149,4 +154,16 @@ public class BoardManager : MonoBehaviour
     // 현재는 DFS 구조로 만들었지만, 
     // 보드의 크기가 매우 커지거나 애니메이션 효과가 필요하거나 
     // 네트워크 동기화 문제 발생 시 BFS로 변경
+
+    public void RevealAllMines()
+    {
+        List<Cell> mineCells = new List<Cell>();
+
+        foreach(Cell cell in cells)
+            if(cell.isMine && cell.cellState == Define.CellState.Unopened)
+                mineCells.Add(cell);
+        
+        foreach(Cell cell in mineCells)
+            cell.OpenCell(false);
+    }
 }
