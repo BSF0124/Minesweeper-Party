@@ -21,6 +21,7 @@ public class BoardRenderer
         {
             for(int row = 0; row < data.rows; row++)
             {
+                // row는 아래 방향으로 증가하므로 y좌표는 감소
                 Vector3 worldPos = new Vector3(
                     startPos.x + col,
                     startPos.y - row,
@@ -38,6 +39,7 @@ public class BoardRenderer
         return cells;
     }
 
+    // 보드 중앙 정렬을 위한 시작 위치 계산
     private Vector3 CalculateStartPosition(int columns, int rows)
     {
         float startX = -(columns - 1) * 0.5f;

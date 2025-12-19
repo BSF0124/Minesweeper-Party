@@ -18,7 +18,9 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     public int aroundMineCount { get; private set; }        // 주변 지뢰 개수
     public Define.CellState cellState { get; private set; } // 셀 상태
 
-    // 셀 설정
+    // 셀 초기화
+    // value == -1 -> 지뢰
+    // value >= 0 -> 주변 지뢰 개수
     public void Init(int column, int row, int value)
     {
         this.column = column;
@@ -34,7 +36,8 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         sr.sprite = cellSprite.unopened;
     }
 
-    // 클릭 이벤트
+    // Unity EventSystem 기반 마우스 클릭 처리
+    // BoardManager로 이벤트 전달
     public void OnPointerClick(PointerEventData eventData)
     {
         // 좌클릭
@@ -61,7 +64,9 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // 셀 열기
+    // 셀을 여는 핵심 로직
+    // explodeMine == true -> 클릭으로 인한 지뢰 폭발
+    // explodeMine == false -> 게임 종료 후 표시용
     public void OpenCell(bool explodeMine = false)
     {
         if(cellState != Define.CellState.Unopened) 

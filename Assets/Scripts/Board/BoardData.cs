@@ -1,8 +1,12 @@
 public class BoardData
 {
+    // 보드 크기(읽기 전용)
     public int columns { get; private set; }
     public int rows { get; private set; }
 
+    // 실제 보드 데이터
+    // -1 : 지뢰
+    // 0~8 : 주변 지뢰 개수
     public int[,] board;
 
     public BoardData(int columns, int rows)
@@ -12,6 +16,7 @@ public class BoardData
         board = new int[columns, rows];
     }
 
+    // 해당 좌표가 지뢰인지 여부 반환
     public bool IsMine(int column, int row)
     {
         return board[column, row] == -1;
@@ -32,6 +37,7 @@ public class BoardData
         board[column, row] = number;
     }
 
+    // 보드 범위 체크 (Out of Range 방지)
     public bool IsInside(int column, int row)
     {
         return column >= 0 && column < columns && row >= 0 && row < rows;

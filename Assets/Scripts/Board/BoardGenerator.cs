@@ -11,7 +11,9 @@ public class BoardGenerator
         this.mineCount = mineCount;
     }
 
-    // 보드 생성
+    // 보드 생성 진입점
+    // 1. 지뢰 배치
+    // 2. 각 셀의 숫자 계산
     public void GenerateBoard()
     {
         PlaceMines();
@@ -23,7 +25,7 @@ public class BoardGenerator
     {
         int placed = 0;
 
-        while(placed <= mineCount)
+        while(placed < mineCount)
         {
             int col = Random.Range(0, data.columns);
             int row = Random.Range(0, data.rows);
@@ -36,7 +38,8 @@ public class BoardGenerator
         }
     }
 
-    // 주변 지뢰 수 계산
+    // 8방향을 순회하며 주변 지뢰 개수 계산
+    // Define.dx / dy 배열을 이용한 방향 탐색
     private void CalculateNumbers()
     {
         for(int col = 0; col < data.columns; col++)

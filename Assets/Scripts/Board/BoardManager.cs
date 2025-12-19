@@ -15,6 +15,7 @@ public class BoardManager : MonoBehaviour
         InitBoard();
     }
 
+    // 보드 데이터 생성 -> 지뢰 생성 -> 화면 렌더링
     private void InitBoard()
     {
         boardData = new BoardData(boardConfig.columns, boardConfig.rows);
@@ -38,6 +39,10 @@ public class BoardManager : MonoBehaviour
         Cell.OnRightClick -= HandleRightClick;
     }
 
+    // 좌클릭 처리 규칙
+    // 1. 깃발 상태면 무시
+    // 2. 이미 열린 셀 -> 주변 자동 오픈
+    // 3. 일반 셀 -> 오픈 시도
     private void HandleLeftClick(Cell cell)
     {
         // Debug.Log($"Left Click: {cell.column}, {cell.row}");
@@ -83,7 +88,8 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    // 인접한 셀 오픈
+    // 이미 열린 셀에서 주변 깃발 개수 == 숫자일 경우
+    // 인접한 미오픈 셀들을 자동으로 오픈
     private void OpenAdjacentCells(Cell cell)
     {
         List<Cell> adjacentCells = new List<Cell>();
@@ -117,7 +123,8 @@ public class BoardManager : MonoBehaviour
             TryOpenCell(adjacentCell);
     }
 
-    // 빈 셀 연쇄 오픈
+    // 주변 지뢰 개수가 0인 셀을 기준으로
+    // 연쇄적으로 셀을 열어가는 DFS 구조
     private void OpenConnectedCells(Cell startCell)
     {
         for(int dir = 0; dir < 8; dir++)

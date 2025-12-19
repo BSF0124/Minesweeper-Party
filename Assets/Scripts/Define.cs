@@ -16,17 +16,19 @@ public static class Define
         new Color32(128,128,128,255)    // #808080
     };
 
-    // 셀의 상태(0: 안열림, 1: 열림, 2: 깃발 표시)
+    // CellState : 셀의 논리적 상태
+    // Unopened : 아직 열리지 않음
+    // Opened   : 열림
+    // Flagged  : 깃발 표시 
     public enum CellState
     {
-        Unopened,
+        Unopened = 0,
         Opened,
-        Flagged,
-        // MineIdle,
-        // MineExploded
+        Flagged
     }
 
-    // 8방향 탐색용
+    // 8방향 탐색용 오프셋 배열
+    // (좌상 -> 상 -> 우상 -> 좌 -> 우 -> 좌하 -> 하 -> 우하)
     public static readonly int[] dx = { -1, 0, 1, -1, 1, -1, 0, 1 };
     public static readonly int[] dy = { -1, -1, -1, 0, 0, 1, 1, 1 };
 }
