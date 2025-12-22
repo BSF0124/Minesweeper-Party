@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/* BoardRenderer
+보드 데이터를 기반으로 셀 오브젝트를 화면에 배치하는 역할
+렌더링 책임만 가지며 게임 규칙에는 관여하지 않음
+*/
 public class BoardRenderer
 {
     private GameObject cellPrefab;
@@ -31,8 +35,7 @@ public class BoardRenderer
                 GameObject cellObj = Object.Instantiate(cellPrefab, worldPos, Quaternion.identity, parent);
 
                 Cell cell = cellObj.GetComponent<Cell>();
-                int value = data.GetValue(col, row);
-                cell.Init(col, row, value);
+                cell.Init(col, row);
                 cells[col,row] = cell;
             }
         }

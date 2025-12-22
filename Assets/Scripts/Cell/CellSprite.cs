@@ -10,4 +10,5 @@ public class CellSprite : ScriptableObject
     public Sprite flag;         // 2
     public Sprite mineIdle;     // 3
     public Sprite mineExploded; // 4
+    public Sprite wrongFlag;    // 5
 }

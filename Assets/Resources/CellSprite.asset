@@ -17,3 +17,4 @@ MonoBehaviour:
   flag: {fileID: 21300000, guid: d96a682ecc7af3546ab7642e5a6abcc6, type: 3}
   mineIdle: {fileID: 21300000, guid: 2c02858a7cbd43745bb3588ba05cefa1, type: 3}
   mineExploded: {fileID: 21300000, guid: a849aecc0f011dc489ebd9c32032f8de, type: 3}
+  wrongFlag: {fileID: 21300000, guid: 1f717889a0b20f84391cfbfc9168842e, type: 3}

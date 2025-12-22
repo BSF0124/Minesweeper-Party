@@ -16,6 +16,13 @@ public class GameManager : MonoBehaviour
         Instance = this;
         gameState = Define.GameState.Playing;
     }
+    public void GameClear()
+    {
+        if(gameState == Define.GameState.Cleared)
+            return;
+
+        gameState = Define.GameState.Cleared;
+    }
 
     public void GameOver()
     {
