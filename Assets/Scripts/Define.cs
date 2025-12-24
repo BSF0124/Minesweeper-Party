@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class Define
 {
+    // GameState : 현재 게임 상태
     public enum GameState
     {
         Playing,

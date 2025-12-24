@@ -56,7 +56,7 @@ public class BoardGenerator
         }
     }
 
-    // 모든 셀을 순호하며 주변 8방향 지뢰 개수 계산
+    // 모든 셀을 순회하며 주변 8방향 지뢰 개수 계산
     // Define.dx / dy를 이용한 공통 방향 탐색 로직 사용
     private void CalculateNumbers()
     {

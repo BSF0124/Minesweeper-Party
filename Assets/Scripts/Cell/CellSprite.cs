@@ -5,10 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CellSprite", menuName = "Minesweeper/Cell Sprite")]
 public class CellSprite : ScriptableObject
 {
-    public Sprite unopened;     // 0
-    public Sprite opened;       // 1
-    public Sprite flag;         // 2
-    public Sprite mineIdle;     // 3
-    public Sprite mineExploded; // 4
-    public Sprite wrongFlag;    // 5
+    public Sprite unopened;
+    public Sprite opened;
+    public Sprite flag;
+    public Sprite mineIdle;
+    public Sprite mineExploded;
+    public Sprite wrongFlag;
 }

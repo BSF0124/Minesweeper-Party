@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,12 +17,21 @@ public class BoardManager : MonoBehaviour
     private BoardData boardData;
     private Cell[,] cells;
 
-    // 안전한 셀 오픈 카운트 (클리어 판정용)
-    public int openedSafeCellCount = 0;
-    public int totalSafeCellCount = 0;
-
     // 첫 클릭 이후 보드 데이터 생성 여부
     bool isBoardGenerated = false;
+
+    // 안전한 셀 오픈 카운트 (클리어 판정용)
+    public int openedSafeCellCount = 0;
+    public int totalSafeCellCount = 480;
+
+    private int flagCount = 0;
+    public int RemainingMineCount 
+    { 
+        get { return boardConfig.mineCount - flagCount; }
+    }
+
+    public event Action<int> OnRemainingMineCountChanged;
+
 
     private void Start()
     {
@@ -56,12 +66,14 @@ public class BoardManager : MonoBehaviour
     {
         Cell.OnLeftClick += HandleLeftClick;
         Cell.OnRightClick += HandleRightClick;
+        Cell.OnFlagToggled += HandleFlagToggled;
     }
 
     private void OnDisable()
     {
         Cell.OnLeftClick -= HandleLeftClick;
         Cell.OnRightClick -= HandleRightClick;
+        Cell.OnFlagToggled -= HandleFlagToggled;
     }
 
     // 좌클릭 처리 규칙
@@ -89,6 +101,7 @@ public class BoardManager : MonoBehaviour
         {
             GenerateBoard(cell.column, cell.row);
             isBoardGenerated = true;
+            GameManager.Instance.StartTimer();
         }
 
         TryOpenCell(cell);
@@ -105,7 +118,18 @@ public class BoardManager : MonoBehaviour
         cell.ToggleFlag();
     }
 
+    private void HandleFlagToggled(Cell cell, bool isFlagged)
+    {
+        if(GameManager.Instance.gameState != Define.GameState.Playing)
+            return;
+        
+        flagCount += isFlagged ? 1 : -1;
+
+        OnRemainingMineCountChanged?.Invoke(RemainingMineCount);
+    }
+
     // 셀 오픈의 유일한 진입점
+    // 모든 오픈 로직은 반드시 이 메서드를 경유해야 함
     // - 지뢰 클릭 -> 게임 오버
     // - 빈 셀 -> 연쇄 오픈
     // - 안전 셀 카운트 증가 및 클리어 판정
@@ -130,7 +154,10 @@ public class BoardManager : MonoBehaviour
 
         // 클리어 조건 검사
         if(++openedSafeCellCount == totalSafeCellCount)
+        {
             GameManager.Instance.GameClear();
+            RevealAllMines();
+        }
     }
 
     // 이미 열린 셀에서 주변 깃발 개수 == 숫자일 경우
@@ -165,7 +192,7 @@ public class BoardManager : MonoBehaviour
     }
 
     // 주변 지뢰 개수가 0인 셀을 기준으로
-    // 연쇄적으로 셀을 열어가는 DFS 구조
+    // DFS 방식으로 인접 셀을 연쇄 오픈
     private void OpenConnectedCells(Cell startCell)
     {
         for(int dir = 0; dir < 8; dir++)

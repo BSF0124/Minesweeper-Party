@@ -16,6 +16,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
 
     public static event Action<Cell> OnLeftClick;   // 좌클릭 이벤트
     public static event Action<Cell> OnRightClick;  // 우클릭 이벤트
+    public static event Action<Cell,bool> OnFlagToggled;
 
     public int column { get; private set; }                 // column id
     public int row { get; private set; }                    // row id
@@ -61,21 +62,20 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     // 깃발 표시 토글
     public void ToggleFlag()
     {
-        if(cellState == Define.CellState.Flagged)
-        {
-            cellState = Define.CellState.Unopened;
-            sr.sprite = cellSprite.unopened;
-        }
-        else if(cellState == Define.CellState.Unopened)
-        {
-            cellState = Define.CellState.Flagged;
-            sr.sprite = cellSprite.flag;
-        }
+        if(cellState == Define.CellState.Opened)
+            return;
+
+        bool isNowFlagged = cellState != Define.CellState.Flagged;
+
+        cellState = isNowFlagged ? Define.CellState.Flagged : Define.CellState.Unopened;
+        sr.sprite = isNowFlagged ? cellSprite.flag : cellSprite.unopened;
+
+        OnFlagToggled?.Invoke(this, isNowFlagged);
     }
 
-    // 셀 오픈 처리
+    // 셀을 열고 상태/스프라이트를 갱신
     // explodeMine == true : 플레이어 클릭으로 인한 폭발
-    // explodeMine == false : 게임 종료 후 지뢰 공개 연출
+    // explodeMine == false : 게임 종료 후 지뢰 공개(연출용)
     public void OpenCell(bool explodeMine = false)
     {
         if(cellState != Define.CellState.Unopened) 
