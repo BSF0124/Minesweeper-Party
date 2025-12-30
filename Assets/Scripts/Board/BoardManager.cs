@@ -11,9 +11,9 @@ using UnityEngine.SceneManagement;
 */
 public class BoardManager : MonoBehaviour
 {
-    [SerializeField] private BoardConfig boardConfig;
     [SerializeField] private GameObject cellPrefab;
 
+    private BoardConfig boardConfig;
     private BoardData boardData;
     private Cell[,] cells;
 
@@ -25,17 +25,49 @@ public class BoardManager : MonoBehaviour
     public int totalSafeCellCount = 480;
 
     private int flagCount = 0;
-    public int RemainingMineCount 
-    { 
-        get { return boardConfig.mineCount - flagCount; }
-    }
+    public int RemainingMineCount => boardConfig.mineCount - flagCount;
 
     public event Action<int> OnRemainingMineCountChanged;
 
+    private void Awake()
+    {
+        if(!TryResolveGameStartContext())
+        {
+            SceneManager.LoadScene("MainMenu");
+            return;
+        }
+
+        GameStartContext.Consume();
+    }
 
     private void Start()
     {
         InitBoard();
+    }
+
+    private bool TryResolveGameStartContext()
+    {
+        if(!GameStartContext.TryGet(out var mode, out var difficulty))
+            return false;
+
+        boardConfig = LoadBoardConfig(mode, difficulty);
+        return boardConfig != null;
+    }
+
+    private BoardConfig LoadBoardConfig(Define.GameMode gameMode, Define.Difficulty difficulty)
+    {
+        string path;
+        if(gameMode == Define.GameMode.Single)
+            path = $"BoardConfig/Board_{difficulty}";
+        else
+            path = $"BoardConfig/Board_{gameMode}";
+
+        BoardConfig config = Resources.Load<BoardConfig>(path);
+
+        if(config == null)
+            Debug.LogError($"BoardConfig 로드 실패: {path}");
+        
+        return config;
     }
 
     // 셀 오브젝트만 생성 (데이터는 아직 없음)
@@ -43,10 +75,29 @@ public class BoardManager : MonoBehaviour
     {
         boardData = new BoardData(boardConfig.columns, boardConfig.rows);
 
+        isBoardGenerated = false;
+
+        openedSafeCellCount = 0;
         totalSafeCellCount = boardConfig.columns * boardConfig.rows - boardConfig.mineCount;
+        
+        flagCount = 0;
+        OnRemainingMineCountChanged?.Invoke(RemainingMineCount);
 
         BoardRenderer renderer = new BoardRenderer(cellPrefab, transform);
         cells = renderer.Render(boardData);
+    }
+
+    public void ResetBoard()
+    {
+        GameManager.Instance.ResetTimer();
+
+        foreach(Transform cellObjects in transform)
+            Destroy(cellObjects.gameObject);
+
+        boardData = null;
+        cells = null;
+
+        InitBoard();
     }
 
     // 첫 클릭 위치를 기준으로 보드 데이터 생성

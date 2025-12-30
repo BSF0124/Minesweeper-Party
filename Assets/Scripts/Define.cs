@@ -2,6 +2,22 @@ using UnityEngine;
 
 public static class Define
 {
+    public enum GameMode
+    {
+        None,
+        Single,
+        Coop,
+        Versus
+    }
+
+    public enum Difficulty
+    {
+        None,
+        Easy,
+        Normal,
+        Hard
+    }
+
     // GameState : 현재 게임 상태
     public enum GameState
     {

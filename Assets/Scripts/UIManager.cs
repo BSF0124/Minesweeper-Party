@@ -15,13 +15,13 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        restartButton.onClick.AddListener(GameManager.Instance.RestartGame);
+        restartButton.onClick.AddListener(boardManager.ResetBoard);
         boardManager.OnRemainingMineCountChanged += UpdateRemainingMineText;
     }
 
     private void OnDisable()
     {
-        restartButton.onClick.RemoveListener(GameManager.Instance.RestartGame);
+        restartButton.onClick.RemoveListener(boardManager.ResetBoard);
         boardManager.OnRemainingMineCountChanged -= UpdateRemainingMineText;
     }
 

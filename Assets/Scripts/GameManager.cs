@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -55,8 +54,10 @@ public class GameManager : MonoBehaviour
             isTimerRunning = true;
     }
 
-    public void RestartGame()
+    public void ResetTimer()
     {
-        SceneManager.LoadScene(0);
+        isTimerRunning = false;
+        elapsedTime = 0f;
+        gameState = Define.GameState.Playing;
     }
 }
