@@ -1,8 +1,9 @@
 using UnityEngine;
 
 /* GameManager
- * 게임 전체 상태를 관리하는 전역 매니저
+ * 게임 전체의 진행 상태를 관리하는 전역 매니저
  * - Playing / GameOver / Cleared 상태 관리
+ * 게임 규칙 판단은 수행하지 않음
  */
 public class GameManager : MonoBehaviour
 {
@@ -50,12 +51,14 @@ public class GameManager : MonoBehaviour
         gameState = Define.GameState.GameOver;
     }
 
+    // 타이머 시작
     public void StartTimer()
     {
         if(!isTimerRunning)
             isTimerRunning = true;
     }
 
+    // 타이머 초기화
     public void ResetTimer()
     {
         isTimerRunning = false;

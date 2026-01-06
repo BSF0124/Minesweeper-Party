@@ -4,17 +4,17 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 /* Cell
- * 하나의 칸(Cell)을 표현하는 컴포넌트
- * - 셀의 좌표, 상태, 지뢰 여부를 보관
- * - 스프라이트 및 숫자 표시 담당
+ * 보드의 한 칸을 표현하는 컴포넌트
+ * - 셀의 좌표, 상태, 지뢰 여부를 저장
+ * - 셀의 시각적 표현(스프라이트, 숫자) 담당
  * - 마우스 입력을 감지하여 이벤트로 전달
  * ※ 게임 규칙은 처리하지 않음
  */
 public class Cell : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] private SpriteRenderer sr;     // 셀 스프라이트 표시용
+    [SerializeField] private SpriteRenderer sr;     // 셀 스프라이트 렌더러
     [SerializeField] private TextMeshProUGUI text;  // 주변 지뢰 개수 표시용 텍스트 
-    [SerializeField] private CellSprite cellSprite; // 셀 상태별 스프라이트 묶음
+    [SerializeField] private CellSprite cellSprite; // 셀 상태별 스프라이트 모음
 
     public static event Action<Cell> OnLeftClick;   // 좌클릭 시 이벤트
     public static event Action<Cell> OnRightClick;  // 우클릭 시 이벤트
@@ -23,7 +23,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     public int column { get; private set; }                 // 보드 상의 x 좌표
     public int row { get; private set; }                    // 보드 상의 y 좌표
     public bool isMine { get; private set; }                // 지뢰 여부
-    public int aroundMineCount { get; private set; }        // 인접한 지뢰 개수
+    public int aroundMineCount { get; private set; }        // 주변 지뢰 개수
     public Define.CellState cellState { get; private set; } // 현재 셀 상태
 
     // 보드 생성 시 셀의 좌표 정보 초기화
@@ -48,7 +48,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         sr.sprite = cellSprite.unopened;
     }
 
-    // Unity EventSystem 기반 클릭 처리
+    // 마우스 클릭 입력 감지
     // 실제 게임 로직은 처리하지 않고 이벤트만 전달
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -76,7 +76,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         OnFlagToggled?.Invoke(this, isNowFlagged);
     }
 
-    // 셀을 여는 처리
+    // 셀 오픈 처리
     // explodeMine : 플레이어 클릭으로 인한 지뢰 폭발 여부
     public void OpenCell(bool explodeMine = false)
     {
@@ -95,7 +95,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         text.gameObject.SetActive(aroundMineCount > 0);
     }
 
-    // 잘못 표시된 깃발 스프라이트 표시
+    // 잘못 표시된 깃발 시각화
     public void ShowWrongFlag()
     {
         sr.sprite = cellSprite.wrongFlag;
