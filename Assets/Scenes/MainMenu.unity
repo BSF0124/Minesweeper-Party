@@ -582,7 +582,7 @@ GameObject:
   - component: {fileID: 434002155}
   - component: {fileID: 434002154}
   m_Layer: 5
-  m_Name: SingleButton
+  m_Name: ClassicButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1420,7 +1420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modePanel: {fileID: 1705898942}
   difficultyPanel: {fileID: 86894144}
-  singleButton: {fileID: 434002154}
+  classicButton: {fileID: 434002154}
   coopButton: {fileID: 2139479851}
   versusButton: {fileID: 831750817}
   easyButton: {fileID: 1679478624}

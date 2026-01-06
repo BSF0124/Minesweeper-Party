@@ -1,13 +1,14 @@
 using UnityEngine;
 
 /* BoardRenderer
-보드 데이터를 기반으로 셀 오브젝트를 화면에 배치하는 역할
-렌더링 책임만 가지며 게임 규칙에는 관여하지 않음
-*/
+ * BoardData 크기를 기준으로
+ * 셀 오브젝트를 화면에 배치하는 역할
+ * 게임 규칙에는 관여하지 않음
+ */
 public class BoardRenderer
 {
-    private GameObject cellPrefab;
-    private Transform parent;
+    private GameObject cellPrefab;  // 생설할 셀 프리팹
+    private Transform parent;       // 셀들의 부모 오브젝트
 
     public BoardRenderer(GameObject cellPrefab, Transform parent)
     {
@@ -15,7 +16,7 @@ public class BoardRenderer
         this.parent = parent;
     }
 
-    // 화면에 셀 오브젝트들을 배치
+    // 셀 오브젝트 생성 및 배치
     public Cell[,] Render(BoardData data)
     {
         Cell[,] cells = new Cell[data.columns, data.rows];

@@ -1,9 +1,13 @@
 using UnityEngine;
 
+/* GameManager
+ * 게임 전체 상태를 관리하는 전역 매니저
+ * - Playing / GameOver / Cleared 상태 관리
+ */
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; }
-    public Define.GameState gameState { get; private set; }
+    public static GameManager Instance { get; private set; }    // 싱글톤 인스턴스
+    public Define.GameState gameState { get; private set; }     // 현재 게임 상태
 
     private bool isTimerRunning = false;
     public float elapsedTime = 0f;
@@ -28,8 +32,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 모든 안전 셀이 열렸을 때 호출
-    // 게임 상태를 Cleared로 전환
+    // 게임 클리어 상태로 전환
     public void GameClear()
     {
         if(gameState == Define.GameState.Cleared)
@@ -38,8 +41,7 @@ public class GameManager : MonoBehaviour
         gameState = Define.GameState.Cleared;
     }
 
-    // 지뢰 클릭 시 호출
-    // 게임 상태를 GameOver로 전환
+    // 게임 오버 상태로 전환
     public void GameOver()
     {
         if(gameState == Define.GameState.GameOver) 

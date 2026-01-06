@@ -8,9 +8,9 @@ public class GameStartContext
     public static Define.GameMode Mode => _mode;
     public static Define.Difficulty Difficulty => _difficulty;
 
-    public static void SetSingle(Define.Difficulty difficulty)
+    public static void SetClassic(Define.Difficulty difficulty)
     {
-        _mode = Define.GameMode.Single;
+        _mode = Define.GameMode.Classic;
         _difficulty = difficulty;
     }
 

@@ -3,31 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 /* BoardManager
-보드 전체의 플레이 규칙과 셀 상호작용을 관리하는 컨트롤러
-- 입력 처리
-- 셀 오픈 규칙
-- 게임 오버 / 클리어 판정
-*/
+ * 보드 전체의 게임 규칙을 관리하는 컨트롤러
+ * - 셀 입력 처리
+ * - 셀 오픈 규칙
+ * - 게임 오버 / 클리어 판정
+ */
 public class BoardManager : MonoBehaviour
 {
-    [SerializeField] private GameObject cellPrefab;
+    [SerializeField] private BoardConfig boardConfig;   // 보드 설정 데이터
+    [SerializeField] private GameObject cellPrefab;     // 셀 프리팹
 
-    private BoardConfig boardConfig;
-    private BoardData boardData;
-    private Cell[,] cells;
+    private BoardData boardData;    // 논리 보드 데이터
+    private Cell[,] cells;          // 셀 오브젝트 참조 배열
 
-    // 첫 클릭 이후 보드 데이터 생성 여부
-    bool isBoardGenerated = false;
+    public int openedSafeCellCount = 0;     // 열린 안전 셀 개수
+    public int totalSafeCellCount = 480;    // 전체 안전 셀 개수
 
-    // 안전한 셀 오픈 카운트 (클리어 판정용)
-    public int openedSafeCellCount = 0;
-    public int totalSafeCellCount = 480;
+    bool isBoardGenerated = false;  // 첫 클릭 이후 보드 생성 여부
 
-    private int flagCount = 0;
-    public int RemainingMineCount => boardConfig.mineCount - flagCount;
-
-    public event Action<int> OnRemainingMineCountChanged;
+    private int flagCount = 0;  // 표시한 깃발 수
+    public int RemainingMineCount => boardConfig.mineCount - flagCount; // 남은 지뢰 수
+    public event Action<int> OnRemainingMineCountChanged; // 남은 지뢰 수 변경 이벤트
 
     private void Awake()
     {
@@ -57,7 +55,7 @@ public class BoardManager : MonoBehaviour
     private BoardConfig LoadBoardConfig(Define.GameMode gameMode, Define.Difficulty difficulty)
     {
         string path;
-        if(gameMode == Define.GameMode.Single)
+        if(gameMode == Define.GameMode.Classic)
             path = $"BoardConfig/Board_{difficulty}";
         else
             path = $"BoardConfig/Board_{gameMode}";
@@ -70,7 +68,8 @@ public class BoardManager : MonoBehaviour
         return config;
     }
 
-    // 셀 오브젝트만 생성 (데이터는 아직 없음)
+    // 게임 시작 시 셀 오브젝트만 생성
+    // 실제 지뢰 데이터는 아직 생성하지 않음
     private void InitBoard()
     {
         boardData = new BoardData(boardConfig.columns, boardConfig.rows);
@@ -100,8 +99,8 @@ public class BoardManager : MonoBehaviour
         InitBoard();
     }
 
-    // 첫 클릭 위치를 기준으로 보드 데이터 생성
-    // 첫 클릭 보호 로직이 적용된 BoardGenerator 사용
+    // 첫 클릭 좌표를 기준으로 보드 데이터 생성
+    // 첫 클릭 보호 규칙 적용
     private void GenerateBoard(int click_col, int click_row)
     {
         BoardGenerator generator = new BoardGenerator(boardData, boardConfig.mineCount, click_col, click_row);
@@ -128,11 +127,7 @@ public class BoardManager : MonoBehaviour
     }
 
     // 좌클릭 처리 규칙
-    // 1. 게임 종료 상태면 무시
-    // 2. 깃발 상태면 무시
-    // 3. 이미 열린 셀 -> 주변 자동 오픈
-    // 4. 첫 클릭이면 보드 데이터 생성
-    // 5. 일반 셀 오픈 시도
+    // 셀 상태에 따라 오픈, 연쇄 오픈, 보드 생성 분기
     private void HandleLeftClick(Cell cell)
     {
         if (GameManager.Instance.gameState != Define.GameState.Playing)
@@ -180,10 +175,7 @@ public class BoardManager : MonoBehaviour
     }
 
     // 셀 오픈의 유일한 진입점
-    // 모든 오픈 로직은 반드시 이 메서드를 경유해야 함
-    // - 지뢰 클릭 -> 게임 오버
-    // - 빈 셀 -> 연쇄 오픈
-    // - 안전 셀 카운트 증가 및 클리어 판정
+    // 모든 셀 오픈은 반드시 이 메서드를 통해 수행
     private void TryOpenCell(Cell cell)
     {
         if(cell.cellState != Define.CellState.Unopened) 
@@ -211,8 +203,8 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    // 이미 열린 셀에서 주변 깃발 개수 == 숫자일 경우
-    // 인접한 미오픈 셀들을 자동으로 오픈
+    // 숫자가 있는 열린 셀에서
+    // 주변 깃발 수가 숫자와 같을 경우 자동 오픈
     private void OpenAdjacentCells(Cell cell)
     {
         List<Cell> adjacentCells = new List<Cell>();
@@ -293,11 +285,6 @@ public class BoardManager : MonoBehaviour
     // 디버깅용
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(0);
-        }
-
         if(Input.GetKeyDown(KeyCode.E))
         {
             RevealAllMines();

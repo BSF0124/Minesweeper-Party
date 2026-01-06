@@ -1,11 +1,27 @@
 using UnityEngine;
 
+/*
+ * Define
+ * 게임 전역에서 공통으로 사용하는
+ * - 열거형
+ * - 상수
+ * - 방향 벡터
+ * 를 정의하는 클래스
+ */
 public static class Define
 {
+    // GameState : 현재 게임 상태
+    public enum GameState
+    {
+        Playing,
+        GameOver,
+        Cleared
+    }
+
     public enum GameMode
     {
         None,
-        Single,
+        Classic,
         Coop,
         Versus
     }
@@ -16,14 +32,6 @@ public static class Define
         Easy,
         Normal,
         Hard
-    }
-
-    // GameState : 현재 게임 상태
-    public enum GameState
-    {
-        Playing,
-        GameOver,
-        Cleared
     }
 
     // CellState : 셀의 논리적 상태

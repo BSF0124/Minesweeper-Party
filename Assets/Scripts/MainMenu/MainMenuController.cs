@@ -9,7 +9,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private GameObject difficultyPanel;
 
     [Header("Mode Button")]
-    [SerializeField] private Button singleButton;
+    [SerializeField] private Button classicButton;
     [SerializeField] private Button coopButton;
     [SerializeField] private Button versusButton;
 
@@ -24,7 +24,7 @@ public class MainMenuController : MonoBehaviour
 
     private void OnEnable()
     {
-        singleButton.onClick.AddListener(HandleSingleClicked);
+        classicButton.onClick.AddListener(HandleClassicClicked);
         coopButton.onClick.AddListener(HandleCoopClicked);
         versusButton.onClick.AddListener(HandleVersusClicked);
 
@@ -36,7 +36,7 @@ public class MainMenuController : MonoBehaviour
 
     private void OnDisable()
     {
-        singleButton.onClick.RemoveListener(HandleSingleClicked);
+        classicButton.onClick.RemoveListener(HandleClassicClicked);
         coopButton.onClick.RemoveListener(HandleCoopClicked);
         versusButton.onClick.RemoveListener(HandleVersusClicked);
 
@@ -46,7 +46,7 @@ public class MainMenuController : MonoBehaviour
         cancelButton.onClick.RemoveListener(HandleCancelClicked);
     }
 
-    private void HandleSingleClicked()
+    private void HandleClassicClicked()
     {
         modePanel.SetActive(false);
         difficultyPanel.SetActive(true);
@@ -64,19 +64,19 @@ public class MainMenuController : MonoBehaviour
 
     private void HandleEasyClicked()
     {
-        GameStartContext.SetSingle(Define.Difficulty.Easy);
+        GameStartContext.SetClassic(Define.Difficulty.Easy);
         SceneManager.LoadScene(gameSceneName);
     }
 
     private void HandleNormalClicked()
     {
-        GameStartContext.SetSingle(Define.Difficulty.Normal);
+        GameStartContext.SetClassic(Define.Difficulty.Normal);
         SceneManager.LoadScene(gameSceneName);
     }
 
     private void HandleHardClicked()
     {
-        GameStartContext.SetSingle(Define.Difficulty.Hard);
+        GameStartContext.SetClassic(Define.Difficulty.Hard);
         SceneManager.LoadScene(gameSceneName);
     }
 
