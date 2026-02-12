@@ -8,7 +8,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }    // 싱글톤 인스턴스
-    public Define.GameState gameState { get; private set; }     // 현재 게임 상태
+    public GameState gameState { get; private set; }     // 현재 게임 상태
 
     private bool isTimerRunning = false;
     public float elapsedTime = 0f;
@@ -22,12 +22,12 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        gameState = Define.GameState.Playing;
+        gameState = GameState.Playing;
     }
 
     private void Update()
     {
-        if(isTimerRunning && gameState == Define.GameState.Playing)
+        if(isTimerRunning && gameState == GameState.Playing)
         {
             elapsedTime += Time.deltaTime;
         }
@@ -36,19 +36,19 @@ public class GameManager : MonoBehaviour
     // 게임 클리어 상태로 전환
     public void GameClear()
     {
-        if(gameState == Define.GameState.Cleared)
+        if(gameState == GameState.Cleared)
             return;
 
-        gameState = Define.GameState.Cleared;
+        gameState = GameState.Cleared;
     }
 
     // 게임 오버 상태로 전환
     public void GameOver()
     {
-        if(gameState == Define.GameState.GameOver) 
+        if(gameState == GameState.GameOver) 
             return;
         
-        gameState = Define.GameState.GameOver;
+        gameState = GameState.GameOver;
     }
 
     // 타이머 시작
@@ -63,6 +63,11 @@ public class GameManager : MonoBehaviour
     {
         isTimerRunning = false;
         elapsedTime = 0f;
-        gameState = Define.GameState.Playing;
+        gameState = GameState.Playing;
+    }
+
+    public void GotoMainMenu()
+    {
+        Utils.LoadScene(SceneNames.MainMenu);
     }
 }

@@ -8,42 +8,45 @@ using UnityEngine;
  * - 숫자 표시 색상
  * - 보드 탐색에 사용되는 방향 오프셋
  */
-public static class Define
+
+public enum GameMode
 {
-    // 선택한 게임 모드
-    public enum GameMode
-    {
-        None,
-        Classic,
-        Coop,
-        Versus
-    }
+    None = 0,
+    Classic,
+    Coop,
+    Versus
+}
 
-    // Classic 게임 모드의 난이도
-    public enum Difficulty
-    {
-        None,
-        Easy,
-        Normal,
-        Hard
-    }
+public enum Difficulty
+{
+    None = 0,
+    Easy,
+    Normal,
+    Hard
+}
 
-    // 현재 게임의 진행 상태를 나타냄
-    public enum GameState
-    {
-        Playing,    // 게임 진행 중
-        GameOver,   // 게임 오버
-        Cleared     // 게임 클리어
-    }
+public enum GameState
+{
+    Playing = 0,
+    GameOver,
+    Cleared
+}
 
-    // CellState : 셀의 논리적 상태
-    public enum CellState
-    {
-        Unopened,   // 열리지 않은 상태
-        Opened,     // 열려있는 상태
-        Flagged     // 깃발이 표시된 상태
-    }
+public enum SceneNames 
+{ 
+    MainMenu = 0, 
+    Game 
+}
 
+public enum CellState
+{
+    Unopened,
+    Opened,
+    Flagged
+}
+
+public static class Constants
+{
     // 셀에 표시되는 숫자(주변 지뢰 개수)에 대응하는 색상 배열
     // 인덱스 = 주변 지뢰 개수
     public static readonly Color32[] NumberColors =

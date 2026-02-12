@@ -24,7 +24,7 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     public int row { get; private set; }                    // 보드 상의 y 좌표
     public bool isMine { get; private set; }                // 지뢰 여부
     public int aroundMineCount { get; private set; }        // 주변 지뢰 개수
-    public Define.CellState cellState { get; private set; } // 현재 셀 상태
+    public CellState cellState { get; private set; } // 현재 셀 상태
 
     // 보드 생성 시 셀의 좌표 정보 초기화
     public void Init(int column, int row)
@@ -41,10 +41,10 @@ public class Cell : MonoBehaviour, IPointerClickHandler
         isMine = value == -1;
         aroundMineCount = isMine ? 0 : value;
         text.text = $"{aroundMineCount}";
-        text.color = Define.NumberColors[aroundMineCount];
+        text.color = Constants.NumberColors[aroundMineCount];
         text.gameObject.SetActive(false);
 
-        cellState = Define.CellState.Unopened;
+        cellState = CellState.Unopened;
         sr.sprite = cellSprite.unopened;
     }
 
@@ -65,12 +65,12 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     // 열린 셀에는 적용되지 않음
     public void ToggleFlag()
     {
-        if(cellState == Define.CellState.Opened)
+        if(cellState == CellState.Opened)
             return;
 
-        bool isNowFlagged = cellState != Define.CellState.Flagged;
+        bool isNowFlagged = cellState != CellState.Flagged;
 
-        cellState = isNowFlagged ? Define.CellState.Flagged : Define.CellState.Unopened;
+        cellState = isNowFlagged ? CellState.Flagged : CellState.Unopened;
         sr.sprite = isNowFlagged ? cellSprite.flag : cellSprite.unopened;
 
         OnFlagToggled?.Invoke(this, isNowFlagged);
@@ -80,10 +80,10 @@ public class Cell : MonoBehaviour, IPointerClickHandler
     // explodeMine : 플레이어 클릭으로 인한 지뢰 폭발 여부
     public void OpenCell(bool explodeMine = false)
     {
-        if(cellState != Define.CellState.Unopened) 
+        if(cellState != CellState.Unopened) 
             return;
         
-        cellState = Define.CellState.Opened;
+        cellState = CellState.Opened;
         
         if(isMine)
         {

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /* BoardManager
  * 보드 전체의 게임 규칙을 관리하는 컨트롤러
@@ -18,8 +17,8 @@ public class BoardManager : MonoBehaviour
     private BoardData boardData;    // 지뢰 및 숫자 정보를 담는 논리 보드 데이터
     private Cell[,] cells;          // 생성된 셀 오브젝트 참조 배열
 
-    public int openedSafeCellCount = 0;     // 열린 안전 셀 개수
-    public int totalSafeCellCount = 480;    // 전체 안전 셀 개수
+    private int openedSafeCellCount = 0;     // 열린 안전 셀 개수
+    private int totalSafeCellCount = 480;    // 전체 안전 셀 개수
 
     bool isBoardGenerated = false;  // 첫 클릭 이후 보드 생성 여부
 
@@ -35,7 +34,7 @@ public class BoardManager : MonoBehaviour
     {
         if(!TryResolveGameStartContext())
         {
-            SceneManager.LoadScene("MainMenu");
+            Utils.LoadScene(SceneNames.MainMenu);
             return;
         }
 
@@ -62,10 +61,10 @@ public class BoardManager : MonoBehaviour
 
     // 선택된 게임 모드 및 난이도에 따라
     // Resource 폴더에서 적절한 BoardConfig를 로드
-    private BoardConfig LoadBoardConfig(Define.GameMode gameMode, Define.Difficulty difficulty)
+    private BoardConfig LoadBoardConfig(GameMode gameMode, Difficulty difficulty)
     {
         string path;
-        if(gameMode == Define.GameMode.Classic)
+        if(gameMode == GameMode.Classic)
             path = $"BoardConfig/Board_{difficulty}";
         else
             path = $"BoardConfig/Board_{gameMode}";
@@ -148,13 +147,13 @@ public class BoardManager : MonoBehaviour
     // 을 분기 처리한다.
     private void HandleLeftClick(Cell cell)
     {
-        if (GameManager.Instance.gameState != Define.GameState.Playing)
+        if (GameManager.Instance.gameState != GameState.Playing)
             return;
         
-        if(cell.cellState == Define.CellState.Flagged)
+        if(cell.cellState == CellState.Flagged)
             return;
 
-        if(cell.cellState == Define.CellState.Opened)
+        if(cell.cellState == CellState.Opened)
         {
             OpenAdjacentCells(cell);
             return;
@@ -174,21 +173,20 @@ public class BoardManager : MonoBehaviour
     // 우클릭 시 셀의 깃발 상태를 토글
     private void HandleRightClick(Cell cell)
     {
-        if (GameManager.Instance.gameState != Define.GameState.Playing)
+        if (GameManager.Instance.gameState != GameState.Playing)
             return;
             
-        if(cell.cellState == Define.CellState.Opened)
+        if(cell.cellState == CellState.Opened)
             return;
 
         cell.ToggleFlag();
     }
 
-
     // 셀의 깃발 상태 변경에 따라
     // 남은 지뢰 수를 갱신
     private void HandleFlagToggled(Cell cell, bool isFlagged)
     {
-        if(GameManager.Instance.gameState != Define.GameState.Playing)
+        if(GameManager.Instance.gameState != GameState.Playing)
             return;
         
         flagCount += isFlagged ? 1 : -1;
@@ -199,7 +197,7 @@ public class BoardManager : MonoBehaviour
     // 모든 셀 오픈이 반드시 거치는 유일한 진입점
     private void TryOpenCell(Cell cell)
     {
-        if(cell.cellState != Define.CellState.Unopened) 
+        if(cell.cellState != CellState.Unopened) 
             return;
 
         cell.OpenCell(cell.isMine);
@@ -233,18 +231,18 @@ public class BoardManager : MonoBehaviour
 
         for(int dir = 0; dir < 8; dir++)
         {
-            int nx = cell.column + Define.dx[dir];
-            int ny = cell.row + Define.dy[dir];
+            int nx = cell.column + Constants.dx[dir];
+            int ny = cell.row + Constants.dy[dir];
 
             if(!boardData.IsInside(nx,ny)) 
                 continue;
 
             Cell nextCell = cells[nx,ny];
 
-            if(nextCell.cellState == Define.CellState.Flagged) 
+            if(nextCell.cellState == CellState.Flagged) 
                 flagCount++;
 
-            else if(nextCell.cellState == Define.CellState.Unopened) 
+            else if(nextCell.cellState == CellState.Unopened) 
                 adjacentCells.Add(nextCell);
         }
 
@@ -261,15 +259,15 @@ public class BoardManager : MonoBehaviour
     {
         for(int dir = 0; dir < 8; dir++)
         {
-            int nx = startCell.column + Define.dx[dir];
-            int ny = startCell.row + Define.dy[dir];
+            int nx = startCell.column + Constants.dx[dir];
+            int ny = startCell.row + Constants.dy[dir];
 
             if(!boardData.IsInside(nx,ny)) 
                 continue;
 
             Cell nextCell = cells[nx,ny];
 
-            if(nextCell.cellState != Define.CellState.Unopened) 
+            if(nextCell.cellState != CellState.Unopened) 
                 continue;
 
             if(nextCell.isMine) 
@@ -288,9 +286,9 @@ public class BoardManager : MonoBehaviour
 
         foreach(Cell cell in cells)
         {
-            if(cell.isMine && cell.cellState == Define.CellState.Unopened)
+            if(cell.isMine && cell.cellState == CellState.Unopened)
                 mineCells.Add(cell);
-            if(!cell.isMine && cell.cellState == Define.CellState.Flagged)
+            if(!cell.isMine && cell.cellState == CellState.Flagged)
                 flagCells.Add(cell);
         }
         

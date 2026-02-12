@@ -12,28 +12,24 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private BoardManager boardManager;
-    // 보드 리셋 및 지뢰 개수 이벤트 구독을 위한 참조
+    [SerializeField] 
+    private BoardManager boardManager; // 보드 리셋 및 지뢰 개수 이벤트 구독을 위한 참조
 
     [Header("UI")]
-    [SerializeField] private TextMeshProUGUI timerText;
-    // 경과 시간 표시 텍스트
-    [SerializeField] private TextMeshProUGUI remainingMineCountText;
-    // 남은 지뢰 개수 표시 텍스트
-    [SerializeField] private Button restartButton;
-    // 보드 재시작 버튼
+    [SerializeField] 
+    private TextMeshProUGUI timerText; // 경과 시간 표시 텍스트
+    [SerializeField] 
+    private TextMeshProUGUI remainingMineCountText; // 남은 지뢰 개수 표시 텍스트
 
     // UI 이벤트 및 보드 이벤트 구독
     private void OnEnable()
     {
-        restartButton.onClick.AddListener(boardManager.ResetBoard);
         boardManager.OnRemainingMineCountChanged += UpdateRemainingMineText;
     }
 
-    //  구독한 이벤트 해제
+    // 구독한 이벤트 해제
     private void OnDisable()
     {
-        restartButton.onClick.RemoveListener(boardManager.ResetBoard);
         boardManager.OnRemainingMineCountChanged -= UpdateRemainingMineText;
     }
 

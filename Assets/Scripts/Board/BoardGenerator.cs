@@ -69,8 +69,8 @@ public class BoardGenerator
 
                 for(int dir = 0; dir < 8; dir++)
                 {
-                    int nc = col + Define.dx[dir];
-                    int nr = row + Define.dy[dir];
+                    int nc = col + Constants.dx[dir];
+                    int nr = row + Constants.dy[dir];
 
                     if(!data.IsInside(nc, nr))
                         continue;
